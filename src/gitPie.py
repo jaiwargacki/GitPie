@@ -12,8 +12,7 @@ Authors can be loaded from a file to skip the git blame step.
 import argparse
 import subprocess
 
-import matplotlib.pyplot as plt
-import numpy as np
+from pieChart import get_ascii_pie
 
 def get_parser() -> argparse.ArgumentParser:
     """
@@ -27,7 +26,7 @@ def get_parser() -> argparse.ArgumentParser:
     parser.add_argument('-r', '--repo', help='Path to the git repository', default=None)
     parser.add_argument('-l', '--load', help='Load authors from file', default=None)
     parser.add_argument('-a', '--authors', help='File to write authors to', default=None)
-    parser.add_argument('-o', '--output', help='Output file for pie chart', default=None)
+    parser.add_argument('-s', '--size', help='Size of the pie chart', default=10)
 
     return parser
 
@@ -105,26 +104,6 @@ def load_authors_from_file(file: str) -> dict:
                 print('Error parsing line: {}'.format(line))
     return authors
 
-def plot_pie(authors: dict, output=None, verbose=False):
-    """
-    Plot a pie chart of the authors contributions.
-    The number of lines in the repo is displayed in the bottom right.
-    If no output file is specified, the pie chart is displayed.
-    :param authors: A dictionary of authors and the number of lines contributed
-    :param output: The file to save the pie chart to (default: None)
-    :param verbose: Whether to print verbose output (default: False)
-    """
-    fig, ax = plt.subplots()
-    ax.pie(authors.values(), labels=authors.keys(), autopct=lambda p: '{:.0f}%'.format(p) if p > 5 else '', startangle=90)
-    ax.text(1, 0, 'Total Lines: {}'.format(sum(authors.values())), verticalalignment='bottom', horizontalalignment='right', transform=ax.transAxes)
-    ax.axis('equal')
-    if output is not None:
-        if verbose:
-            print('Saving pie chart to {}'.format(output))
-        plt.savefig(output)
-    else:
-        plt.show()
-
 def main():
     """
     Main function for the script. See get_parser() for command line arguments
@@ -134,6 +113,11 @@ def main():
 
     if args.repo is not None and args.load is not None:
         print('Cannot specify both a repository and a load file')
+        return
+    try:
+        size = int(args.size)
+    except:
+        print('Size must be an integer')
         return
 
     authors = dict()
@@ -159,7 +143,14 @@ def main():
             for key in authors.keys():
                 f.write('{},{}\n'.format(key, authors[key]))
 
-    plot_pie(authors, args.output, args.verbose)
+    if args.verbose:
+        print('Authors:')
+        for key in authors.keys():
+            print('{}: {}'.format(key, authors[key]))
+    
+    
+    output = get_ascii_pie(authors, size)
+    print(output)
 
 if __name__ == "__main__":
     main()
