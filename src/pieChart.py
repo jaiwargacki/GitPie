@@ -16,16 +16,16 @@ END = '\033[0m'
 COLORS = [RED, GREEN, YELLOW, BLUE, PURPLE, CYAN]
 
 
-def create_splits(data: dict) -> tuple:
+def create_splits(data: list) -> tuple:
     """
     Create the splits for the pie chart.
     :param data: The data to create the splits for
     :return: A tuple containing the total and the splits
     """
-    total = sum(data.values())
+    total = sum([value for _, value in data])
     splits = []
     current = 0
-    for value in data.values():
+    for _, value in data:
         current += value
         splits.append((current / total) * 360)
     return total, splits
@@ -58,10 +58,10 @@ def get_char_at_point(x: int, y: int, splits: list) -> str:
 
 
 
-def get_ascii_pie(data: dict, radius: int = 10, include_total: bool = True, include_key: bool = True) -> str:
+def get_ascii_pie(data: list, radius: int = 10, include_total: bool = True, include_key: bool = True) -> str:
     """
     Creates an ascii pie chart from the given data.
-    :param data: The data to create the pie chart from (Key: Author, Value: Number of lines)
+    :param data: The data to create the pie chart from list of (Author, Number of lines)
     :param radius: The radius (doubled on x axis) of the pie chart (default: 10)
     :param include_total: Whether to include the total number of lines (default: True)
     :param include_key: Whether to include the key (default: True)
@@ -80,7 +80,7 @@ def get_ascii_pie(data: dict, radius: int = 10, include_total: bool = True, incl
     if include_total:
         output += 'Total Number of Lines: {}\n'.format(total)
     if include_key:
-        for i, author in enumerate(data.keys()):
-            percentage = round(data[author] / total * 100, 2)
-            output += '\t{}{}{}: {} lines({}%)\n'.format(COLORS[i % len(COLORS)], author, END, data[author], percentage)
+        for i in range(len(data)):
+            percentage = round(data[i][1] / total * 100, 2)
+            output += '\t{}{}{}: {} lines({}%)\n'.format(COLORS[i % len(COLORS)], data[i][0], END, data[i][1], percentage)
     return output
