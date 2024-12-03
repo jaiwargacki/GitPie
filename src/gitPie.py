@@ -102,6 +102,25 @@ def load_authors_from_file(file: str) -> dict:
                 print('Error parsing line: {}'.format(line))
     return authors
 
+def group_lowest_authors(data: list, threshold_percent: float) -> list:
+    """
+    Group authors with less than a certain percentage of the total lines into an 'Other' category.
+    :param data: The data to group
+    :param threshold_percent: The percentage of total lines below which to group authors
+    :return: The grouped data
+    """
+    total = sum([value for _, value in data])
+    threshold = total * threshold_percent
+    other = 0
+    new_data = []
+    for author, value in data:
+        if value < threshold:
+            other += value
+        else:
+            new_data.append((author, value))
+    new_data.append(('Other', other))
+    return new_data
+
 def main():
     """
     Main function for the script. See get_parser() for command line arguments
@@ -143,6 +162,7 @@ def main():
 
     authors = list(authors.items())
     authors.sort(key=lambda x: x[1], reverse=True)
+    authors = group_lowest_authors(authors, 0.05)
 
     if args.verbose:
         print('Authors:')
