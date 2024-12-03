@@ -9,8 +9,11 @@ Authors can be loaded from a file to skip the git blame step.
 
 import argparse
 import subprocess
+from multiprocessing import Pool
 
 from pieChart import get_ascii_pie
+
+NUMBER_OF_THREADS = 10
 
 def get_parser() -> argparse.ArgumentParser:
     """
@@ -142,15 +145,15 @@ def main():
         authors = load_authors_from_file(args.load)
     elif args.repo is not None:
         repo_files = get_repo_filenames(args.repo, args.verbose)
-        for file in repo_files:
-            author = get_authors_for_file(args.repo, file, args.verbose)
-            if author is None:
-                continue
-            for key in author.keys():
-                if key not in authors:
-                    authors[key] = author[key]
-                else:
-                    authors[key] += author[key]
+        with Pool(NUMBER_OF_THREADS) as p:
+            results = p.starmap(get_authors_for_file, [(args.repo, file, args.verbose) for file in repo_files])
+            for result in results:
+                if result is not None:
+                    for author, value in result.items():
+                        if author not in authors:
+                            authors[author] = value
+                        else:
+                            authors[author] += value
     else:
         print('Must specify either a repository or a load file')
         return
