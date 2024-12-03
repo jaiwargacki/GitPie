@@ -146,8 +146,8 @@ def main():
 
     if args.verbose:
         print('Authors:')
-        for pair in authors:
-            print('{}: {}'.format(pair[0], pair[1]))
+        for author, value in authors:
+            print('{}: {}'.format(author, value))
     
     
     output = get_ascii_pie(authors, size)
