@@ -2,8 +2,6 @@
 Create a pie chart of authors contributions to current lines of code in a git repository.
 This script uses git blame to get the authors of each line in the repository.
 The pie chart shows the percentage of lines contributed by each author.
-The number of lines in the repository is displayed in the bottom right.
-The pie chart can be saved to a file or displayed.
 Authors and the number of lines they contributed can be saved to a file.
 Authors can be loaded from a file to skip the git blame step.
 @author: Jai Wargacki
