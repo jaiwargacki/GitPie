@@ -141,10 +141,13 @@ def main():
             for key in authors.keys():
                 f.write('{},{}\n'.format(key, authors[key]))
 
+    authors = list(authors.items())
+    authors.sort(key=lambda x: x[1], reverse=True)
+
     if args.verbose:
         print('Authors:')
-        for key in authors.keys():
-            print('{}: {}'.format(key, authors[key]))
+        for pair in authors:
+            print('{}: {}'.format(pair[0], pair[1]))
     
     
     output = get_ascii_pie(authors, size)
