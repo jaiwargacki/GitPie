@@ -6,7 +6,20 @@ The pie chart shows the percentage of lines contributed by each author in an ASC
 Authors and the number of lines they contributed can be saved to a file.
 Authors can be loaded from a file to skip the git blame step.
 
-![Pie Chart Example](exampleData/pie.png)
+```
+           🟨🟨🟨🟨🟨
+        🟨🟨🟨🟨🟨🟨🟦
+      🟥🟥🟨🟨🟨🟨🟦🟦🟦
+    🟥🟥🟥🟨🟨🟨🟦🟦🟦🟦
+   🟥🟥🟥🟥🟨🟨🟦🟦🟦🟦🟦
+  🟥🟥🟥🟥🟥🟨🟦🟦🟦🟦🟦🟦
+   🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥
+    🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥
+      🟥🟥🟥🟥🟥🟥🟥🟥🟥
+        🟥🟥🟥🟥🟥🟥🟥
+            🟥🟥🟥🟥
+
+```
 
 ## Usage
 `usage: GitPie [-h] [-v] [-r REPO] [-l LOAD] [-a AUTHORS] [-s SIZE]`
